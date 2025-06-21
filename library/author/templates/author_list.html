@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Усі автори{% endblock %}
+
+{% block content %}
+<style>
+  .authors-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .authors-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .author-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .author-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #222;
+  }
+
+  .author-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .author-actions form {
+    margin: 0;
+  }
+
+  .btn {
+    background-color: #0d6efd;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .btn:hover {
+    background-color: #0b5ed7;
+  }
+
+  .add-author-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .add-author-link:hover {
+    text-decoration: underline;
+  }
+
+  .no-authors {
+    color: #888;
+    text-align: center;
+    margin-top: 20px;
+  }
+</style>
+
+<div class="authors-container">
+  <h2>Список авторів</h2>
+
+  {% if authors %}
+    <ul>
+      {% for author in authors %}
+        <li class="author-item">
+          <span class="author-name">
+            {{ author.name }}{% if author.patronymic %} {{ author.patronymic }}{% endif %} {{ author.surname }}
+          </span>
+          {% if user.is_librarian %}
+            <div class="author-actions">
+              <form method="post" action="{% url 'author_delete' author.id %}">
+                {% csrf_token %}
+                <button class="btn" type="submit">Видалити</button>
+              </form>
+              <form method="get" action="">
+                <button class="btn" type="submit">Редагувати</button>
+              </form>
+            </div>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="no-authors">Авторів не знайдено.</p>
+  {% endif %}
+
+  {% if user.is_librarian %}
+    <a class="add-author-link" href="{% url 'author_create' %}">+ Додати нового автора</a>
+  {% endif %}
+</div>
+{% endblock %}

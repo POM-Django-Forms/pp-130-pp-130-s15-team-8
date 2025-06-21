@@ -1,0 +1,66 @@
+<style>
+    nav {
+        background-color: #0d6efd;
+        padding: 10px;
+    }
+
+    nav ul {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        gap: 40px;
+        font-size: 18px;
+    }
+
+    nav li {
+        margin-right: 10px;
+        margin-left: 20px;
+    }
+
+    nav li a {
+        color: white;
+        text-decoration: none;
+    }
+
+    nav li a:hover {
+        color: #ffc107;
+    }
+</style>
+
+<nav>
+    <ul>
+        <li>
+            <a href="{% url 'books-info' %}">Books</a>
+        </li>
+        <li>
+            <a href="{% url 'orders-list' %}">Orders</a>
+        </li>
+        {% if user.is_librarian %}
+        <li>
+            <a href="{% url 'author_list' %}">Authors</a>
+        </li>
+        <li>
+            <a href="{% url 'user_list' %}">Users</a>
+        </li>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <li style="margin-left: auto;">
+            <a href="{% url 'profile' %}" style="color: white;">
+                {% if user.is_librarian %}
+                Librarian
+                {% else %}
+                User
+                {% endif %}
+                {{ user.first_name }}
+            </a>
+            <a href="{% url 'logout' %}" style="color: white; margin-left: 10px;">Logout</a>
+        </li>
+        {% else %}
+        <li style="margin-left: auto;">
+            <a href="{% url 'login' %}" style="color: white;">Login</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>

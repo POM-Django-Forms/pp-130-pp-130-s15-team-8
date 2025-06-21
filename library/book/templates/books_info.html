@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Інформація про всі книги{% endblock %}
+
+{% block content %}
+<style>
+  .book-container {
+    max-width: 900px;
+    margin: 40px auto;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f8f9fa;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .book-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .sort-form {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .sort-form select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  .book-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+  }
+
+  .book-table th,
+  .book-table td {
+    padding: 12px 16px;
+    border: 1px solid #dee2e6;
+    text-align: left;
+  }
+
+  .book-table th {
+    background-color: #e9ecef;
+    font-weight: 600;
+  }
+
+  .book-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  .book-table tr:hover {
+    background-color: #e3e3e3;
+  }
+
+  .book-name a {
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .book-name a:hover {
+    text-decoration: underline;
+  }
+
+  .no-books {
+    text-align: center;
+    color: #6c757d;
+    margin-top: 20px;
+  }
+
+  button {
+        background-color: #0d6efd;
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0b5ed7;
+    }
+</style>
+
+<div class="book-container">
+  <h1>Список книг</h1>
+
+  <form method="get" class="sort-form">
+    <label for="sort">Сортувати за:</label>
+    <select name="sort" id="sort" onchange="this.form.submit()">
+      <option value="">Оберіть</option>
+      <option value="name_asc" {% if selected_sort == 'name_asc' %}selected{% endif %}>Назва (А-Я)</option>
+      <option value="name_desc" {% if selected_sort == 'name_desc' %}selected{% endif %}>Назва (Я-А)</option>
+      <option value="count_asc" {% if selected_sort == 'count_asc' %}selected{% endif %}>Кількість (↑)</option>
+      <option value="count_desc" {% if selected_sort == 'count_desc' %}selected{% endif %}>Кількість (↓)</option>
+    </select>
+  </form>
+
+  {% if books %}
+    <table class="book-table">
+      <thead>
+        <tr>
+          <th>Назва</th>
+          <th>Автор(и)</th>
+          <th>Кількість</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+          <tr>
+            <td class="book-name">
+              <a href="{% url 'book-detail' book.id %}">{{ book.name }}</a>
+            </td>
+            <td>
+              {% if book.authors.all %}
+                {% for author in book.authors.all %}
+                  {{ author.name }} {% if author.patronymic %}{{ author.patronymic }} {% endif %}{{ author.surname }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              {% else %}
+                <em>Автори відсутні</em>
+              {% endif %}
+            </td>
+            <td>{{ book.count }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="no-books">Жодної книги не знайдено.</p>
+  {% endif %}
+</div>
+{% endblock %}

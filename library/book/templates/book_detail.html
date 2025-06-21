@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Книга: {{ book.name }}{% endblock %}
+
+{% block content %}
+<style>
+  .book-detail-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .book-detail-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+  }
+
+  .book-detail-container ul {
+    list-style-type: none;
+    padding: 0;
+    font-size: 16px;
+  }
+
+  .book-detail-container li {
+    margin-bottom: 15px;
+  }
+
+  .label {
+    font-weight: 600;
+    color: #444;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 25px;
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  em {
+    color: #888;
+  }
+</style>
+
+<div class="book-detail-container">
+  {% if book %}
+    <h1>{{ book.name }}</h1>
+    <ul>
+      <li><span class="label">Назва:</span> {{ book.name }}</li>
+
+      <li><span class="label">Автор(и):</span>
+        {% if book.authors.all %}
+          {% for author in book.authors.all %}
+            {{ author.name }} {% if author.patronymic %}{{ author.patronymic }} {% endif %}{{ author.surname }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        {% else %}
+          <em>Автори відсутні</em>
+        {% endif %}
+      </li>
+
+      <li><span class="label">Опис:</span> {{ book.description }}</li>
+      <li><span class="label">Кількість примірників:</span> {{ book.count }}</li>
+    </ul>
+  {% else %}
+    <h1>Такої книги не існує.</h1>
+  {% endif %}
+
+  <a class="back-link" href="{% url 'books-info' %}">← Назад до списку</a>
+</div>
+{% endblock %}

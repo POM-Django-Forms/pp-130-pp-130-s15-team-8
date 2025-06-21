@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %}
+<h2>All Users</h2>
+<ul>
+  {% for user in users %}
+    <li>
+      <a href="{% url 'user_detail' user.id %}" style="text-decoration: none;">{{ user.first_name }} ({{ user.email }})</a>
+    </li>
+  {% endfor %}
+</ul>
+<a href="{% url 'logout' %}">Logout</a>
+{% endblock %}
